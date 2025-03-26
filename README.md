@@ -1,6 +1,6 @@
 # 📊 Rust Monitoring Bot
 
-[![Author](https://img.shields.io/badge/Author-Etherinus-blue.svg)](https://github.com/Etherinus)
+[![Author](https://img.shields.io/badge/Author-Etherinus-blue.svg)](https://github.com/Etherinus) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
 Hello! This is `rust-monitoring-bot`, created by **Thomas Rendes (aka Etherinus)**. This Discord bot helps Rust server administrators easily display information about their servers and monitor their online status using BattleMetrics.
 
