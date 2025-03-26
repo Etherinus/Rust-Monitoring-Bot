@@ -63,7 +63,7 @@ async function updateEmbeds(interaction) {
             if (err.code !== 10008 && err.code !== 10003) {
                 console.error('[EmbedData] Failed to delete old message:', err.message);
             } else {
-                 console.log('[EmbedData] Old message/channel no longer exists.');
+                console.log('[EmbedData] Old message/channel no longer exists.');
             }
         } finally {
             storedEmbedsChannelId = null;

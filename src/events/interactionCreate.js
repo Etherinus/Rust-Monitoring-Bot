@@ -23,7 +23,7 @@ module.exports = async (interaction, client) => {
                 ephemeral: true
             });
         } catch (err) {
-             console.error(`[Permissions] Failed to send permission error reply for /${interaction.commandName}:`, err);
+            console.error(`[Permissions] Failed to send permission error reply for /${interaction.commandName}:`, err);
         }
         return;
     }
@@ -68,15 +68,15 @@ module.exports = async (interaction, client) => {
         } catch (err) {
             console.error(`[/${commandName}] ❌ Error:`, err);
             try {
-                 if (!interaction.replied && !interaction.deferred) {
+                if (!interaction.replied && !interaction.deferred) {
                     await interaction.reply({ content: `❌ An internal error occurred while configuring monitoring: ${err.message}`, ephemeral: true });
-                 } else if (!interaction.replied) {
+                } else if (!interaction.replied) {
                     await interaction.editReply(`❌ An internal error occurred while configuring monitoring: ${err.message}`);
-                 } else {
-                     await interaction.followUp({ content: `❌ An internal error occurred after configuration: ${err.message}`, ephemeral: true });
-                 }
+                } else {
+                    await interaction.followUp({ content: `❌ An internal error occurred after configuration: ${err.message}`, ephemeral: true });
+                }
             } catch (e) {
-                 console.error(`[/${commandName}] Failed to send error message:`, e);
+                console.error(`[/${commandName}] Failed to send error message:`, e);
             }
         }
         return;
@@ -101,15 +101,15 @@ module.exports = async (interaction, client) => {
         } catch (error) {
             console.error(`[/${commandName}] ❌ Error removing from monitoring:`, error);
             try {
-                 if (!interaction.replied && !interaction.deferred) {
+                if (!interaction.replied && !interaction.deferred) {
                     await interaction.reply({ content: `❌ An error occurred while removing from monitoring: ${error.message}`, ephemeral: true });
-                 } else if (!interaction.replied) {
+                } else if (!interaction.replied) {
                     await interaction.editReply(`❌ An error occurred while removing from monitoring: ${error.message}`);
-                 } else {
-                     await interaction.followUp({ content: `❌ An error occurred after removal from monitoring: ${error.message}`, ephemeral: true });
-                 }
+                } else {
+                    await interaction.followUp({ content: `❌ An error occurred after removal from monitoring: ${error.message}`, ephemeral: true });
+                }
             } catch (e) {
-                 console.error(`[/${commandName}] Failed to send error message:`, e);
+                console.error(`[/${commandName}] Failed to send error message:`, e);
             }
         }
         return;
@@ -170,11 +170,11 @@ module.exports = async (interaction, client) => {
             console.error(`[/${commandName}] ❌ Error:`, err);
             try {
                 if (!interaction.replied && !interaction.deferred) {
-                     await interaction.reply({ content: `❌ Error during ${commandName === 'setserverinfo' ? 'creation/update' : 'addition'} of Embed: ${err.message}`, ephemeral: true });
+                    await interaction.reply({ content: `❌ Error during ${commandName === 'setserverinfo' ? 'creation/update' : 'addition'} of Embed: ${err.message}`, ephemeral: true });
                 } else if (!interaction.replied) {
                     await interaction.editReply(`❌ Error during ${commandName === 'setserverinfo' ? 'creation/update' : 'addition'} of Embed: ${err.message}`);
                 } else {
-                     await interaction.followUp({ content: `❌ Error during ${commandName === 'setserverinfo' ? 'creation/update' : 'addition'} of Embed: ${err.message}`, ephemeral: true });
+                    await interaction.followUp({ content: `❌ Error during ${commandName === 'setserverinfo' ? 'creation/update' : 'addition'} of Embed: ${err.message}`, ephemeral: true });
                 }
             } catch (e) {console.error(`[/${commandName}] Failed to send error message:`, e);}
         }
@@ -189,8 +189,8 @@ module.exports = async (interaction, client) => {
             const totalEmbeds = currentEmbeds.length;
 
             if (totalEmbeds === 0) {
-                 await interaction.editReply('❌ No Embeds to remove.');
-                 return;
+                await interaction.editReply('❌ No Embeds to remove.');
+                return;
             }
             if (indexToRemove < 1 || indexToRemove > totalEmbeds) {
                 await interaction.editReply(`❌ Invalid Embed number. Specify a number between 1 and ${totalEmbeds}.`);
@@ -200,8 +200,8 @@ module.exports = async (interaction, client) => {
             const removed = removeStoredEmbedByIndex(indexToRemove - 1);
 
             if (!removed) {
-                 await interaction.editReply(`❌ Failed to find or remove Embed number ${indexToRemove}.`);
-                 return;
+                await interaction.editReply(`❌ Failed to find or remove Embed number ${indexToRemove}.`);
+                return;
             }
 
             console.log(`[/${commandName}] Removed Embed #${indexToRemove}. Remaining: ${getStoredEmbeds().length}.`);
@@ -211,13 +211,13 @@ module.exports = async (interaction, client) => {
         } catch (err) {
             console.error(`[/${commandName}] ❌ Error:`, err);
             try {
-                 if (!interaction.replied && !interaction.deferred) {
+                if (!interaction.replied && !interaction.deferred) {
                     await interaction.reply({ content: `❌ Error removing Embed: ${err.message}`, ephemeral: true });
-                 } else if (!interaction.replied) {
+                } else if (!interaction.replied) {
                     await interaction.editReply(`❌ Error removing Embed: ${err.message}`);
-                 } else {
-                     await interaction.followUp({ content: `❌ Error removing Embed: ${err.message}`, ephemeral: true});
-                 }
+                } else {
+                    await interaction.followUp({ content: `❌ Error removing Embed: ${err.message}`, ephemeral: true});
+                }
             } catch (e) {console.error(`[/${commandName}] Failed to send error message:`, e);}
         }
         return;
@@ -229,7 +229,7 @@ module.exports = async (interaction, client) => {
             await interaction.reply({ content: '🤔 Unknown command.', ephemeral: true });
         } catch (error) {
             if (error.code !== 10062 && error.code !== 40060) {
-                 console.error('[Interaction] Error responding to unknown command:', error);
+                console.error('[Interaction] Error responding to unknown command:', error);
             }
         }
     }

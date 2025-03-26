@@ -89,12 +89,12 @@ function buildMonitorEmbed(status, serverInfo) {
     const embed = new EmbedBuilder()
         .setColor(embedColor)
         .setTitle('📊 Server Monitoring')
-        .addFields({ name: '<:server:YOUR_REAL_EMOJI_ID> **Server:**', value: `${status.serverName}` });
+        .addFields({ name: '<:server:1354278159423504559> **Server:**', value: `${status.serverName}` });
 
     if (status.online) {
         embed.addFields(
             {
-                name: '<:serveronline:YOUR_REAL_EMOJI_ID> **Status:**',
+                name: '<:serveronline:1354278141333471302> **Status:**',
                 value: `Online - ${status.currentPlayers}/${status.maxPlayers}`,
                 inline: false
             }
@@ -103,7 +103,7 @@ function buildMonitorEmbed(status, serverInfo) {
             embed.addFields({ name: '📝 **Description:**', value: status.description, inline: false });
         }
         if (status.connectString && status.connectString !== 'No connection data') {
-             embed.addFields({ name: '<:connect:YOUR_REAL_EMOJI_ID> **Connect:**', value: status.connectString, inline: false });
+             embed.addFields({ name: '<:connect:1354278147448766574> **Connect:**', value: status.connectString, inline: false });
         }
 
     } else {
@@ -111,11 +111,11 @@ function buildMonitorEmbed(status, serverInfo) {
             ? 'Offline (API Error)'
             : 'Offline';
         embed.addFields({
-            name: '<:servererror:YOUR_REAL_EMOJI_ID> **Status:**',
+            name: '<:servererror:1354278131447496775> **Status:**',
             value: statusValue,
             inline: false
         });
-         if (status.connectString && status.connectString !== 'No connection data' && status.connectString !== 'API Error') {
+        if (status.connectString && status.connectString !== 'No connection data' && status.connectString !== 'API Error') {
             embed.addFields({ name: 'ℹ️ **Last Known Connection:**', value: status.connectString, inline: false });
         }
     }
@@ -129,16 +129,16 @@ async function updateCombinedMonitorMessage(client, interaction = null) {
     if (isUpdating) {
         if (interaction && (interaction.deferred || interaction.replied === false)) {
              try {
-                 const replyContent = '⏳ Monitoring is currently updating. Your changes will be applied automatically in the next cycle.';
-                 if (interaction.deferred) {
-                     await interaction.followUp({ content: replyContent, ephemeral: true });
-                 } else {
-                     await interaction.reply({ content: replyContent, ephemeral: true });
-                 }
+                const replyContent = '⏳ Monitoring is currently updating. Your changes will be applied automatically in the next cycle.';
+                if (interaction.deferred) {
+                    await interaction.followUp({ content: replyContent, ephemeral: true });
+                } else {
+                    await interaction.reply({ content: replyContent, ephemeral: true });
+                }
              } catch (e) {
-                 if (e.code !== 10062 && e.code !== 'InteractionAlreadyReplied') {
+                if (e.code !== 10062 && e.code !== 'InteractionAlreadyReplied') {
                     console.error("[Monitor] Could not reply about monitoring being busy:", e);
-                 }
+                }
             }
         }
         return;
@@ -220,12 +220,12 @@ async function updateCombinedMonitorMessage(client, interaction = null) {
                     await new Promise(resolve => setTimeout(resolve, delayBetweenRequestsMs));
                 }
             } catch (error) {
-                 console.error(`[Monitor] Unexpected error during FETCH CALL for server ${serverInfo.id}:`, error);
-                 statuses.push({
+                console.error(`[Monitor] Unexpected error during FETCH CALL for server ${serverInfo.id}:`, error);
+                statuses.push({
                     serverId: serverInfo.id, online: false, currentPlayers: 0, maxPlayers: 0,
                     connectString: 'Critical Error', serverName: `Server ${serverInfo.id} (error)`, description: null
                 });
-                 if (i < monitoredServers.length - 1) {
+                if (i < monitoredServers.length - 1) {
                     await new Promise(resolve => setTimeout(resolve, delayBetweenRequestsMs));
                 }
             }
@@ -238,8 +238,7 @@ async function updateCombinedMonitorMessage(client, interaction = null) {
         }
 
         const embeds = validStatuses.map((status) => {
-            const serverInfo = monitoredServers.find(s => s.id === status.serverId)
-                             || { id: status.serverId, showDescription: false, color: null };
+            const serverInfo = monitoredServers.find(s => s.id === status.serverId) || { id: status.serverId, showDescription: false, color: null };
             return buildMonitorEmbed(status, serverInfo);
         });
 
@@ -263,8 +262,8 @@ async function updateCombinedMonitorMessage(client, interaction = null) {
                 console.log('[Monitor] Monitoring message not found or ID unknown, creating a new one...');
                 const targetChannelForSend = interaction?.channel ?? channel;
                 if (!targetChannelForSend) {
-                     console.error('[Monitor] ❌ Could not determine channel to send new monitoring message!');
-                     return;
+                    console.error('[Monitor] ❌ Could not determine channel to send new monitoring message!');
+                    return;
                 }
 
                 const perms = targetChannelForSend.permissionsFor(client.user);
@@ -275,7 +274,7 @@ async function updateCombinedMonitorMessage(client, interaction = null) {
                         try {
                         if (interaction.deferred) await interaction.followUp({ content: errorMessage, ephemeral: true });
                         else await interaction.reply({ content: errorMessage, ephemeral: true });
-                        } catch { }
+                    } catch { }
                 }
                 return;
                 }
@@ -294,9 +293,9 @@ async function updateCombinedMonitorMessage(client, interaction = null) {
             }
             if (interaction && (interaction.deferred || !interaction.replied)) {
                 try {
-                     const errorMsg = `❌ An error occurred while updating the message: ${error.message}`;
-                      if(interaction.deferred) await interaction.followUp({ content: errorMsg, ephemeral: true });
-                      else await interaction.reply({ content: errorMsg, ephemeral: true });
+                    const errorMsg = `❌ An error occurred while updating the message: ${error.message}`;
+                    if(interaction.deferred) await interaction.followUp({ content: errorMsg, ephemeral: true });
+                    else await interaction.reply({ content: errorMsg, ephemeral: true });
                 } catch (e) { }
             }
         }
@@ -304,11 +303,11 @@ async function updateCombinedMonitorMessage(client, interaction = null) {
     } catch (error) {
          console.error('[Monitor] ❌ Unexpected critical error in updateCombinedMonitorMessage:', error);
          if (interaction && (interaction.deferred || !interaction.replied)) {
-             try {
+            try {
                 const errorMsg = `❌ A critical error occurred: ${error.message}`;
                 if(interaction.deferred) await interaction.followUp({ content: errorMsg, ephemeral: true });
                 else await interaction.reply({ content: errorMsg, ephemeral: true });
-             } catch(e) { }
+            } catch(e) { }
          }
     } finally {
         isUpdating = false;

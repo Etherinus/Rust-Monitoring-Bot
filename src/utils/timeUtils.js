@@ -16,9 +16,7 @@ function getNextWipeTimestamp(dayOfWeek, timeStr) {
 
     let daysToAdd = targetDay - currentDay;
 
-    if (daysToAdd < 0 || (daysToAdd === 0 && (now.getHours() > h || (now.getHours() === h && now.getMinutes() >= m)))) {
-        daysToAdd += 7;
-    }
+    if (daysToAdd < 0 || (daysToAdd === 0 && (now.getHours() > h || (now.getHours() === h && now.getMinutes() >= m)))) {daysToAdd += 7;}
 
     const nextWipeDate = new Date(now);
     nextWipeDate.setDate(now.getDate() + daysToAdd);
@@ -29,9 +27,7 @@ function getNextWipeTimestamp(dayOfWeek, timeStr) {
 
 function getNextDailyTimestamp(timeStr) {
     const [h, m] = timeStr.split(':').map(Number);
-     if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
-        throw new Error(`Invalid time format for restart: "${timeStr}". Expected HH:MM.`);
-    }
+    if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {throw new Error(`Invalid time format for restart: "${timeStr}". Expected HH:MM.`);}
 
     const now = new Date();
     const nextRestartDate = new Date(now);

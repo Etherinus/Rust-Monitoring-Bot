@@ -14,7 +14,7 @@ function formatDescription(rawDescription) {
         const lastNewlineBeforeCutoff = cleaned.substring(0, MAX_DESC_LENGTH).lastIndexOf('\n');
 
         if (lastNewlineBeforeCutoff > MAX_DESC_LENGTH * 0.5) {
-             cleaned = cleaned.substring(0, lastNewlineBeforeCutoff) + '\n...';
+            cleaned = cleaned.substring(0, lastNewlineBeforeCutoff) + '\n...';
         } else {
             cleaned = cleaned.substring(0, MAX_DESC_LENGTH - 3) + '...';
         }
