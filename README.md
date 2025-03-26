@@ -71,25 +71,25 @@ Before you start, ensure you have installed:
     MONITOR_INTERVAL_MINUTES=15
 
     # Logging level (error, warn, info, debug) (default: info)
-    # LOG_LEVEL=debug
+    LOG_LEVEL=debug
 
     # Delay between requests to different BM servers in ms (default: 600)
-    # BM_REQUEST_DELAY_MS=1000
+    BM_REQUEST_DELAY_MS=1000
 
     # Delay before the first monitoring cycle starts in ms (default: 10000)
-    # MONITOR_INITIAL_DELAY_MS=5000
+    MONITOR_INITIAL_DELAY_MS=5000
 
     # Default icon URL for server info embeds (default: Flaticon icon URL)
-    # DEFAULT_EMBED_ICON=https://example.com/icon.png
+    DEFAULT_EMBED_ICON=https://example.com/icon.png
 
     # Path to the directory for storing data files (default: ./data)
-    # DATA_PATH=/app/data
+    DATA_PATH=/app/data
 
     # Filename for embed data (within DATA_PATH) (default: embedsData.json)
-    # EMBEDS_DATA_FILE=server_info.json
+    EMBEDS_DATA_FILE=server_info.json
 
     # Filename for monitoring data (within DATA_PATH) (default: monitors_combined_v3.json)
-    # MONITOR_DATA_FILE=monitors.json
+    MONITOR_DATA_FILE=monitors.json
     ```
     ⚠️ **Important:** Do not add the `.env` file to version control (Git). Ensure it is listed in your `.gitignore` file.
 
