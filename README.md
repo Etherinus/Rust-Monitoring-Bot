@@ -2,82 +2,122 @@
 
 [![Author](https://img.shields.io/badge/Author-Etherinus-blue.svg)](https://github.com/Etherinus) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
-Hello! This is `rust-monitoring-bot`, created by **Thomas Rendes (aka Etherinus)**. This Discord bot helps Rust server administrators easily display information about their servers and monitor their online status using BattleMetrics.
+Hello! This is `rust-monitoring-bot`, a refactored version of the bot created by **Thomas Rendes (aka Etherinus)**. This Discord bot helps Rust server administrators easily display information about their servers and monitor their online status using BattleMetrics, employing a more modern and maintainable code approach.
 
 ## ✨ Features
 
-* **Informational Embeds:** Create and manage beautiful embeds with server information (IP, wipe schedule, restarts, rules, mode, map, etc.).
-* **BattleMetrics Monitoring:** Automatically track the online/offline status and player count of Rust servers via the BattleMetrics API.
-* **Unified Monitoring Message:** Display the status of all monitored servers in a single, automatically updated Discord message.
-* **Flexible Customization:** Set custom colors for each monitoring embed.
-* **Automatic Updates:** Server statuses update every 15 minutes.
-* **Easy Management:** All commands accessible via Discord slash commands (`/`).
-* **Data Persistence:** Embed configurations and monitoring server lists saved in JSON files (`embedsData.json`, `monitors_combined_v1.json`).
+*   **Informational Embeds:** Create and manage beautiful embeds with server information (IP, wipe schedule, restarts, mode, map, etc.).
+*   **BattleMetrics Monitoring:** Automatically track the online/offline status and player count of Rust servers via the BattleMetrics API.
+*   **Unified Monitoring Message:** Display the status of all monitored servers in a single, automatically updated Discord message.
+*   **Flexible Customization:** Set custom colors for each monitoring embed. Configure the update interval and other parameters via `.env`.
+*   **Automatic Updates:** Server statuses update at a configurable interval (default is 15 minutes).
+*   **Easy Management:** All commands accessible via Discord slash commands (`/`).
+*   **Data Persistence:** Embed configurations and monitoring server lists are saved in JSON files within the `data/` folder (filenames are configurable).
+*   **Improved Structure:** Modular code separated into services, commands, events, and utilities for better readability and maintainability.
+*   **Configuration via `.env`:** Centralized and secure management of all keys and parameters.
+*   **Logging:** Uses `winston` for more informative logging of events and errors.
 
 ## ⚙️ Prerequisites
 
-Before you start, ensure you have:
+Before you start, ensure you have installed:
 
-* [Node.js](https://nodejs.org/) (version 16.x or higher recommended)
-* [npm](https://www.npmjs.com/) (usually installed with Node.js) or [yarn](https://yarnpkg.com/)
-* **Discord Bot Account:** Create an application and bot on the [Discord Developer Portal](https://discord.com/developers/applications). You will need:
-    * Bot `TOKEN`
-    * Application `CLIENT_ID`
-* **Your Discord Server (Guild) ID:** [How to find ID](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-)
-* **(Optional, for monitoring) BattleMetrics API Token:** Obtain a token from [BattleMetrics](https://www.battlemetrics.com/developers).
+*   [Node.js](https://nodejs.org/) (version 18.x or higher recommended)
+*   [npm](https://www.npmjs.com/) (usually installed with Node.js) or [yarn](https://yarnpkg.com/)
+*   **Discord Bot Account:** Create an application and bot on the [Discord Developer Portal](https://discord.com/developers/applications). You will need:
+    *   Bot `TOKEN`
+    *   Application `CLIENT_ID`
+*   **Your Discord Server (Guild) ID:** [How to find your ID](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-)
+*   **(Optional, for monitoring) BattleMetrics API Token:** Obtain a token from [BattleMetrics Developers](https://www.battlemetrics.com/developers).
 
 ## 🚀 Installation and Launch
 
-1. **Clone the repository:**
+1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/etherinus/rust-monitoring-bot
+    git clone https://github.com/etherinus/rust-monitoring-bot # Replace with your URL if it's a fork
     cd rust-monitoring-bot
     ```
 
-2. **Install dependencies:**
+2.  **Install dependencies:**
     ```bash
     npm install
     # or if using yarn:
     # yarn install
     ```
 
-3. **Create the `.env` configuration file:**
-    * Create a file named `.env` **in the project's root directory** (one level above the `src` folder).
-    * Copy the content from below and fill in your values.
+3.  **Create the `.env` configuration file:**
+    *   In the **project's root directory** (at the same level as the `src` folder), create a file named `.env`.
+    *   Copy the content below and fill in **your** values.
 
     ```dotenv
-    # .env file
+    # === Required Variables ===
 
-    # Discord Bot Token (Required)
+    # Your Discord Bot Token
     TOKEN=YOUR_DISCORD_BOT_TOKEN
 
-    # Discord Application Client ID (Required)
+    # Your Discord Application Client ID (Application ID)
     CLIENT_ID=YOUR_APPLICATION_CLIENT_ID
 
-    # Discord Server (Guild) ID (Required) - Server ID where commands will be registered
+    # Discord Server (Guild) ID where commands will be registered
     GUILD_ID=YOUR_DISCORD_SERVER_ID
 
-    # BattleMetrics API Token (Optional but needed for monitoring)
+    # === Variables for Monitoring (Required if using monitoring) ===
+
+    # BattleMetrics API Token
     BATTLEMETRICS_TOKEN=YOUR_BATTLEMETRICS_API_TOKEN
+
+    # === Optional Variables (Have default values in config/index.js) ===
+
+    # Monitoring update interval in minutes (default: 15)
+    MONITOR_INTERVAL_MINUTES=15
+
+    # Logging level (error, warn, info, debug) (default: info)
+    # LOG_LEVEL=debug
+
+    # Delay between requests to different BM servers in ms (default: 600)
+    # BM_REQUEST_DELAY_MS=1000
+
+    # Delay before the first monitoring cycle starts in ms (default: 10000)
+    # MONITOR_INITIAL_DELAY_MS=5000
+
+    # Default icon URL for server info embeds (default: Flaticon icon URL)
+    # DEFAULT_EMBED_ICON=https://example.com/icon.png
+
+    # Path to the directory for storing data files (default: ./data)
+    # DATA_PATH=/app/data
+
+    # Filename for embed data (within DATA_PATH) (default: embedsData.json)
+    # EMBEDS_DATA_FILE=server_info.json
+
+    # Filename for monitoring data (within DATA_PATH) (default: monitors_combined_v3.json)
+    # MONITOR_DATA_FILE=monitors.json
     ```
-    ⚠️ **Important:** Do not add `.env` file to version control (Git). Ensure it is included in your `.gitignore`.
+    ⚠️ **Important:** Do not add the `.env` file to version control (Git). Ensure it is listed in your `.gitignore` file.
 
-4. **Invite the bot to your server:**
-    * Generate a bot invite link from the Discord Developer Portal. Ensure the bot has the required permissions (`bot`, `application.commands`). Embeds and messages require `Send Messages`, `Embed Links`, `Manage Messages` permissions.
-    * Follow the link to add the bot to your server (the one you specified in `.env`).
+4.  **Create the data directory:**
+    *   In the **project's root directory**, manually create a folder named `data`. The bot will automatically create JSON files inside it.
 
-5. **Run the bot:**
+5.  **Invite the bot to your server:**
+    *   Generate a bot invite link from the Discord Developer Portal (`OAuth2` -> `URL Generator`). Select the `bot` and `application.commands` scopes.
+    *   Ensure the bot has the necessary permissions in Discord: `View Channels`, `Send Messages`, `Embed Links`, `Manage Messages` (for deleting old messages).
+    *   Follow the link to add the bot to your server (the one whose ID is specified in `.env`).
+
+6.  **Run the bot:**
     ```bash
     node src/index.js
     ```
-    *Or, if you configured a `start` script in `package.json`:*
+    *Or, if you have configured a `start` script in `package.json`:*
     ```bash
     npm start
     # or
     # yarn start
     ```
 
-After launch, the bot registers slash commands on your server and will be ready for use.
+7.  **(Optional, on first run or after changing commands) Register commands:**
+    *   If commands don't appear in Discord, open `src/index.js`, find and **uncomment** the line `// await registerCommands(client);`.
+    *   **Restart the bot once**. Wait for the log `[API] ✅ Successfully registered application commands.`.
+    *   **Comment the line back out** and save the file.
+
+After launching, the bot will load the configuration, initialize services, and be ready for use.
 
 ## 🛠️ Commands
 
@@ -194,27 +234,42 @@ Replace `YOUR_REAL_EMOJI_ID` with the actual ID from your Discord emojis.
 ```bash
 rust-monitoring-bot/
 │
-├── src/
-│   ├── commands/
-│   │   └── registerCommands.js       # Slash commands registration
-│   ├── data/
-│   │   ├── embedData.js              # Logic for informational embeds
-│   │   └── monitorData.js            # Logic for BattleMetrics monitoring
-│   ├── events/
-│   │   ├── interactionCreate.js      # Command and interaction handling
-│   │   └── ready.js                  # Bot ready event handling
-│   ├── utils/
-│   │   ├── battlemetricsUtils.js     # Functions for BattleMetrics API
-│   │   ├── textUtils.js              # Text formatting utilities
-│   │   └── timeUtils.js              # Time utilities (wipes, restarts)
-│   └── index.js                      # Main entry point
+├── src/                            # Main source code directory
+│   ├── index.js                    # Application entry point: Initializes client, services, loads commands & events
+│   ├── commands/                   # Contains all slash command definitions
+│   │   ├── index.js                # Loads all command files and handles command registration
+│   │   └── admin/                  # Subdirectory for commands requiring administrator permissions
+│   ├── config/                     # Handles configuration loading
+│   │   └── index.js                # Loads environment variables from .env and provides the config object
+│   ├── errors/                     # Custom error classes for specific error handling
+│   │   └── AppError.js             # Base custom error class
+│   ├── events/                     # Discord.js event handlers
+│   │   ├── index.js                # Loads all event handler files
+│   │   ├── interactionCreate.js    # Handles incoming interactions (slash commands, buttons, etc.)
+│   │   └── ready.js                # Executes code when the bot successfully connects to Discord
+│   ├── services/                   # Core business logic, data management, and external API interactions
+│   │   ├── BattleMetricsService.js # Handles all communication with the BattleMetrics API
+│   │   ├── EmbedDataService.js     # Manages the creation, storage, and updating of informational embeds
+│   │   ├── MonitorDataService.js   # Manages the list and state of monitored servers
+│   │   └── MonitoringService.js    # Orchestrates the periodic fetching and updating of server statuses
+│   └── utils/                      # Utility functions, constants, and shared helpers
+│       ├── constants.js            # Defines shared constants like command names, options, default values
+│       ├── discordUtils.js         # Helper functions specific to Discord.js (e.g., building embeds, safe replies)
+│       ├── logger.js               # Configures the Winston logger for application-wide logging
+│       ├── textUtils.js            # Utility functions for string manipulation and formatting
+│       └── timeUtils.js            # Utility functions for time/date calculations (e.g., next wipe/restart)
 │
-├── .env                               # Configuration file (DO NOT ADD TO GIT!)
-├── embedsData.json                    # Informational embed data (auto-generated)
-├── monitors_combined_v1.json          # BattleMetrics monitoring data (auto-generated)
-├── package.json                       # Project dependencies and scripts
-├── package-lock.json                  # or yarn.lock
-└── README.md                          # This file
+├── data/                           # Directory storing persistent data (Must be created manually first)
+│   ├── embedsData.json             # Stores data for informational embeds (Auto-generated on first save)
+│   └── monitors_combined_v1.json   # Stores data for monitored servers (Auto-generated on first save)
+│
+├── logs/                           # Directory for log files (May be created by Winston if file transport is enabled)
+├── node_modules/                   # Stores project dependencies (Managed by npm/yarn)
+├── .env                            # Environment variables (BOT TOKEN, API keys, etc.)
+├── .gitignore                      # Specifies intentionally untracked files that Git should ignore
+├── package.json                    # Lists project dependencies and defines npm scripts
+├── package-lock.json               # Records exact versions of dependencies (Generated by npm)
+└── README.md                       # This file: Project description, setup, and usage guide
 ```
 
 ---

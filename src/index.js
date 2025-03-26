@@ -1,43 +1,60 @@
-const { Client, GatewayIntentBits, Events } = require('discord.js');
-const dotenv = require('dotenv');
-const path = require('path');
-const fs = require('fs');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const config = require('./config');
+const logger = require('./utils/logger');
+const { loadCommands, registerCommands } = require('./commands');
+const { loadEvents } = require('./events');
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+const embedDataService = require('./services/EmbedDataService');
+const monitorDataService = require('./services/MonitorDataService');
+const MonitoringService = require('./services/MonitoringService');
 
-const registerCommands = require('./commands/registerCommands');
-const { loadData } = require('./data/embedData');
-const { loadMonitors, getMonitorUpdateIntervalMs } = require('./data/monitorData');
-const handleInteraction = require('./events/interactionCreate');
-const handleReady = require('./events/ready');
-const { updateCombinedMonitorMessage } = require('./utils/battlemetricsUtils');
+logger.info('Starting bot application...');
 
-const token = process.env.TOKEN;
-const clientId = process.env.CLIENT_ID;
-const guildId = process.env.GUILD_ID;
-const battlemetricsToken = process.env.BATTLEMETRICS_TOKEN;
-
-if (!token) { console.error('❌ Error: TOKEN not found in .env!'); process.exit(1); }
-if (!clientId) { console.error('❌ Error: CLIENT_ID not found in .env!'); process.exit(1); }
-if (!guildId) { console.error('❌ Error: GUILD_ID not found in .env!'); process.exit(1); }
-if (!battlemetricsToken) { console.warn('⚠️ Warning: BATTLEMETRICS_TOKEN not found. Monitoring will not work.'); }
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
-loadData();
-loadMonitors();
-
-registerCommands(token, clientId, guildId);
-
-client.once(Events.ClientReady, readyClient => {
-    handleReady(readyClient, updateCombinedMonitorMessage, getMonitorUpdateIntervalMs);
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+    ]
 });
 
-client.on(Events.InteractionCreate, async interaction => {
-    await handleInteraction(interaction, client);
-});
+const services = {
+    embedDataService,
+    monitorDataService,
+    monitoringService: new MonitoringService(client),
+    config,
+    logger,
+};
 
-process.on('unhandledRejection', e => console.error('❌ Unhandled Rejection:', e));
-process.on('uncaughtException', e => console.error('❌ Uncaught Exception:', e));
+async function initializeDataServices() {
+    logger.info('Initializing data services...');
+    try {
+        await embedDataService.initialize();
+        await monitorDataService.initialize();
+        logger.info('✅ Data services initialized successfully.');
+    } catch (error) {
+        logger.error(`❌ Critical error during data service initialization: ${error.message}`, { stack: error.stack });
+        logger.error('Bot may not function correctly without data services. Shutting down.');
+        process.exit(1);
+    }
+}
 
-client.login(token);
+async function startBot() {
+    try {
+        await initializeDataServices();
+
+        loadCommands(client, services);
+        loadEvents(client, services);
+
+        await registerCommands(client);
+
+        logger.info('Logging in to Discord...');
+        await client.login(config.discord.token);
+
+    } catch (error) {
+        logger.error(`❌ Fatal error during bot startup: ${error.message}`, { stack: error.stack });
+        process.exit(1);
+    }
+}
+
+startBot();
+
+module.exports = { client, services };
