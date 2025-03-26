@@ -1,5 +1,13 @@
+const { ActivityType } = require('discord.js');
+
 module.exports = async (client, updateMonitorFunc, intervalMs) => {
     console.log(`✅ Bot ${client.user.tag} is ready!`);
+
+    try {
+        await client.user.setActivity('Creator: Etherinus', { type: ActivityType.Watching });
+    } catch (error) {
+        console.error('[Status] ❌ Could not establish activity:', error);
+    }
 
     if (process.env.BATTLEMETRICS_TOKEN) {
         const intervalMinutes = intervalMs / 60 / 1000;
