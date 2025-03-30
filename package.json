@@ -1,0 +1,29 @@
+{
+  "name": "rust-monitoring-bot",
+  "author": "Etherinus",
+  "version": "1.0.0",
+  "description": "Discord bot for displaying information and monitoring Rust servers",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Tests are not configured\" && exit 0"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "rust",
+    "server",
+    "monitor",
+    "info",
+    "battlemetrics"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^2.6.7"
+  },
+  "engines": {
+    "node": ">=16.9.0"
+  }
+}
